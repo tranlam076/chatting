@@ -15,7 +15,7 @@ export default class GroupEvent {
                 return callback (
                     {
                         Success: false,
-                        Error: 'Couldnt find that group'
+                        Error: 'Couldn\'t find that group'
                     }
                 );
             }

@@ -7,8 +7,14 @@ export default class BaseRepository {
     }
 
     async getAll (options) {
+        if (options.limit !== undefined && options.limit > 100) {
+            options.limit = 100;
+        }
         const newOptions = {
-            limit: 1000,
+            limit: 100,
+            oder: [
+                ['createdAt', 'DESC']
+            ],
             ...options
         };
         return await this._model.findAll(newOptions);

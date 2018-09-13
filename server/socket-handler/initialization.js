@@ -28,6 +28,7 @@ export default class SocketInitialization {
                     console.log('-----------Socket disconnect------------');
                     UserEvent.userDisconnect(localStorage.getItem(socket.id));
                     GroupEvent.userDisconnect(socket, localStorage.getItem(socket.id));
+                    localStorage.removeItem(socket.id);
                 });
             });
     }

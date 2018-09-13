@@ -8,6 +8,7 @@ export default class UserEvent {
         if(!updateStatus) {
             return new Error('Can not update online status')
         }
+        socket.join(socket.user.id);
     }
 
     static async userDisconnect (userId) {

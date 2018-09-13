@@ -12,7 +12,7 @@ export default class GroupEvent {
         socket.on('rooms', async function (requestData, callback) {
             const groupInfo = await groupController.getListMembers(requestData.data.groupId);
             if (!groupInfo) {
-                return callback (
+                return callback(
                     {
                         Success: false,
                         Error: 'Couldn\'t find that group'
@@ -34,6 +34,34 @@ export default class GroupEvent {
                             members: members
                         }
                     });
+                case 'create':
+                    const group = await groupController.createGroup({
+                        body: {
+                            name: requestData.data.body,
+                            type: requestData.data.type,
+                            memberIds: requestData.data.memberIds,
+                            partnerId: requestData.data.partnerId,
+                        },
+                        user: socket.user
+                    });
+
+                    if (group.partnerId !== null) {
+                        socket.join(group.partnerId);
+                        socket.broadcast.to(group.partnerId).emit('rooms', {
+                            action: 'create',
+                            data: group
+                        });
+                        return callback(null, group);
+                    } else if (group.memberGroupIds !== undefined && group.memberGroupIds.length > 0) {
+                        for (let memberId of group.memberGroupIds) {
+                            socket.join(memberId);
+                            socket.broadcast.to(memberId).emit('rooms', {
+                                action: 'create',
+                                data: group
+                            });
+                        }
+                        return callback(null, group);
+                    }
             }
         });
     }

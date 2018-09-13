@@ -193,7 +193,12 @@ export default class GroupController {
                 }
             });
             await MemberGroup.bulkCreate(memberGroups); // Check if not create member group successfully
-            return Response.returnSuccess(res, newGroup);
+            if (res !== undefined) {
+                return Response.returnSuccess(res, newGroup);
+            } else {
+                newGroup.memberGroupIds = memberGroupIds;
+                return newGroup;
+            }
         } catch (e) {
             if (newGroup) {
                 Group.destroy({
